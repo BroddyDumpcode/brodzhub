@@ -187,7 +187,8 @@ function GUI:Init(modules)
         -- set default
         local defaultPercent = (defaultValue-minValue)/(maxValue-minValue)
         updateSlider(defaultPercent)
-    
+        bar.Active = true
+        knob.Active = true
         knob.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
@@ -290,6 +291,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
