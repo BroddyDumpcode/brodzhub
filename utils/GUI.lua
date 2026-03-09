@@ -143,68 +143,51 @@ function GUI:Init(modules)
 
         return button
     end
-
-    local function createSlider(parent, posY, minValue, maxValue, defaultValue, textLabel, callback)
+    
+    local function createSlider(parent, minValue, maxValue, defaultValue, labelText, callback)
         local container = Instance.new("Frame", parent)
-        container.Size = UDim2.new(0.8, 0, 0, 60)
-        container.Position = UDim2.new(0.1, 0, 0, posY)
+        container.Size = UDim2.new(0.9, 0, 0, 40)
         container.BackgroundTransparency = 1
 
-        -- TITLE
-        local title = Instance.new("TextLabel", container)
-        title.Size = UDim2.new(1, 0, 0, 20)
-        title.BackgroundTransparency = 1
-        title.TextColor3 = Color3.fromRGB(0,255,180)
-        title.Text = textLabel .. ": " .. defaultValue
-        title.Font = Enum.Font.Arcade
-        title.TextScaled = true
+        -- Label
+        local label = Instance.new("TextLabel", container)
+        label.Size = UDim2.new(1, 0, 0, 15)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(0,255,180)
+        label.Text = labelText .. ": " .. defaultValue
+        label.Font = Enum.Font.Arcade
+        label.TextScaled = true
 
-        -- SLIDER BAR
-        local sliderFrame = Instance.new("Frame", container)
-        sliderFrame.Size = UDim2.new(1, 0, 0, 20)
-        sliderFrame.Position = UDim2.new(0, 0, 0, 30)
-        sliderFrame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+        -- Bar
+        local bar = Instance.new("Frame", container)
+        bar.Size = UDim2.new(1, 0, 0, 8)
+        bar.Position = UDim2.new(0, 0, 0, 20)
+        bar.BackgroundColor3 = Color3.fromRGB(200,200,200)
+        bar.BackgroundTransparency = 0.3
 
-        local sliderCorner = Instance.new("UICorner", sliderFrame)
-        sliderCorner.CornerRadius = UDim.new(0,10)
-
-        -- FILL
-        local fill = Instance.new("Frame", sliderFrame)
+        -- Fill
+        local fill = Instance.new("Frame", bar)
         fill.BackgroundColor3 = Color3.fromRGB(0,170,255)
 
-        local fillCorner = Instance.new("UICorner", fill)
-        fillCorner.CornerRadius = UDim.new(0,10)
-
-        -- KNOB
-        local knob = Instance.new("Frame", sliderFrame)
-        knob.Size = UDim2.new(0, 18, 0, 18)
+        -- Knob
+        local knob = Instance.new("Frame", bar)
+        knob.Size = UDim2.new(0, 20, 0, 20)
+        knob.AnchorPoint = Vector2.new(0.5, 0.5)
+        knob.Position = UDim2.new((defaultValue-minValue)/(maxValue-minValue), 0, 0.5, 0)
         knob.BackgroundColor3 = Color3.fromRGB(255,255,255)
-
-        local knobCorner = Instance.new("UICorner", knob)
-        knobCorner.CornerRadius = UDim.new(1,0)
+        knob.BorderSizePixel = 0
+        knob.ZIndex = 2
 
         local dragging = false
-
-        -- UPDATE FUNCTION
         local function update(percent)
             percent = math.clamp(percent, 0, 1)
-
             fill.Size = UDim2.new(percent, 0, 1, 0)
-            knob.Position = UDim2.new(percent, -9, 0.5, -9)
-
-            local value = math.floor(minValue + (maxValue - minValue) * percent)
-            title.Text = textLabel .. ": " .. value
-
-            if callback then
-                callback(value)
-            end
+            knob.Position = UDim2.new(percent, 0, 0.5, 0)
+            local value = math.floor(minValue + (maxValue-minValue)*percent)
+            label.Text = labelText .. ": " .. value
+            if callback then callback(value) end
         end
 
-        -- DEFAULT SET
-        local defaultPercent = (defaultValue - minValue) / (maxValue - minValue)
-        update(defaultPercent)
-
-        -- INPUT
         knob.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
@@ -212,20 +195,23 @@ function GUI:Init(modules)
             end
         end)
 
-        UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 
-            or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
-            end
-        end)
-
-        UserInputService.InputChanged:Connect(function(input)
+        knob.InputChanged:Connect(function(input)
             if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
             or input.UserInputType == Enum.UserInputType.Touch) then
                 local percent = (input.Position.X - sliderFrame.AbsolutePosition.X) / sliderFrame.AbsoluteSize.X
                 update(percent)
             end
         end)
+
+        knob.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 
+            or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+            end
+        end)
+
+
+        update((defaultValue-minValue)/(maxValue-minValue))
     end
 
     modules.ngabret:Enable()
