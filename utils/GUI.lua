@@ -251,11 +251,11 @@ function GUI:Init(modules)
         if button.Text == "ESP OFF" then
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
             button.Text = "ESP ON"
-            modules.nclip:Enable()
+            modules.esp:Enable()
         else
             button.BackgroundColor3 = Color3.fromRGB(170,0,0)
             button.Text = "ESP OFF"
-            modules.nclip:Disable()
+            modules.esp:Disable()
         end
     end)
     local infJumpBtn = makeBtn(content, "INF JUMP OFF", 110, function(button)
@@ -301,5 +301,6 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
