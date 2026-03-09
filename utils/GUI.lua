@@ -179,35 +179,33 @@ function GUI:Init(modules)
             title.Text = textLabel .. ": " .. value
             if callback then callback(value) end
         end
-        
+    
         local defaultPercent = (defaultValue - minValue) / (maxValue - minValue)
         update(defaultPercent)
     
-        -- PC + Touch input
-        local function startDrag(input)
+        -- bind hanya ke knob, bukan global
+        knob.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 dragging = true
             end
-        end
+        end)
     
-        local function stopDrag(input)
+        knob.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 dragging = false
             end
-        end
+        end)
     
-        local function doDrag(input)
-            if dragging then
+        UserInputService.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                 local percent = (input.Position.X - sliderFrame.AbsolutePosition.X) / sliderFrame.AbsoluteSize.X
                 update(percent)
             end
-        end
+        end)
     
-        knob.InputBegan:Connect(startDrag)
-        knob.InputEnded:Connect(stopDrag)
-        UserInputService.InputBegan:Connect(startDrag)
-        UserInputService.InputEnded:Connect(stopDrag)
-        UserInputService.InputChanged:Connect(doDrag)
+        return {
+            IsDragging = function() return dragging end
+        }
     end
     modules.ngabret:Enable()
     createSlider(content, 60, 16, 100, 16, "Speed", function(value)
@@ -215,6 +213,34 @@ function GUI:Init(modules)
     end)
     createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
         modules.ngapung:setSpeed(value)
+    end)
+    if flyConnection then
+        flyConnection:Disconnect()
+        flyConnection = nil
+    end
+    
+    flyConnection = RunService.RenderStepped:Connect(function()
+        -- skip fly movement kalau slider sedang digeser
+        if speedSlider.IsDragging() or flySlider.IsDragging() then
+            return
+        end
+    
+        local hrp = modules.ngapung.getHRP() -- pastikan ada function getHRP() di fly module
+        if not hrp then return end
+    
+        local camCF = workspace.CurrentCamera.CFrame
+        local moveDir = Vector3.new(
+            modules.ngapung.control.l + modules.ngapung.control.r,
+            modules.ngapung.control.u + modules.ngapung.control.d,
+            modules.ngapung.control.f + modules.ngapung.control.b
+        )
+    
+        modules.ngapung.bv.Velocity =
+            camCF.LookVector * moveDir.Z * modules.ngapung.speed +
+            camCF.RightVector * moveDir.X * modules.ngapung.speed +
+            Vector3.new(0, moveDir.Y * modules.ngapung.speed, 0)
+    
+        modules.ngapung.bg.CFrame = camCF
     end)
     local flyBtn = makeBtn(content, "FLY OFF", 170, function(button)
         if button.Text == "FLY OFF" then
@@ -287,6 +313,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
