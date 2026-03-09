@@ -35,6 +35,8 @@ function GUI:Init(modules)
     local layout = Instance.new("UIListLayout", content)
     layout.Padding = UDim.new(0,10)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout.VerticalAlignment = Enum.VerticalAlignment.Top
 
 
     -- TITLE
@@ -109,10 +111,11 @@ function GUI:Init(modules)
         }
     end
     -- DEFINISI TOMBOL
-    local function makeBtn(parent, text, yPos, callback)
-
+    local function makeBtn(parent, text, callback)
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.8, 0, 0, 32)
+        button.Size = UDim2.new(0.8, 0, 0, 32) -- lebar 80% biar pas
+        button.AnchorPoint = Vector2.new(0.5, 0) -- titik tengah horizontal
+        button.Position = UDim2.new(0.5, 0, 0, 0) -- otomatis di tengah parent
         button.BackgroundColor3 = Color3.fromRGB(60,60,60)
         button.Font = Enum.Font.Arcade
         button.TextColor3 = Color3.fromRGB(0,255,180)
@@ -120,28 +123,26 @@ function GUI:Init(modules)
         button.TextSize = 16
         button.TextScaled = false
         button.Parent = parent
-        button.AnchorPoint = Vector2.new(0.5, 0.5)
-        button.Position = UDim2.new(0.5, 0, 0.5, 0)
+
         local corner = Instance.new("UICorner", button)
         corner.CornerRadius = UDim.new(0,10)
-        corner.Parent = button
 
-        -- Hover
+        -- Hover effect
         button.MouseEnter:Connect(function()
             button.BackgroundColor3 = Color3.fromRGB(80,80,80)
         end)
-
         button.MouseLeave:Connect(function()
             button.BackgroundColor3 = Color3.fromRGB(60,60,60)
         end)
+
         button.MouseButton1Click:Connect(function()
             if callback then
                 callback(button)
             end
         end)
+
         return button
     end
-    local UserInputService = game:GetService("UserInputService")
 
     local function createSlider(parent, posY, minValue, maxValue, defaultValue, textLabel, callback)
         local container = Instance.new("Frame", parent)
@@ -234,7 +235,7 @@ function GUI:Init(modules)
     flySlider = createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
         modules.ngapung:setSpeed(value)
     end)
-    makeBtn(content, "FLY OFF", 170, function(button)
+    makeBtn(content, "FLY OFF", function(button)
         if button.Text == "FLY OFF" then
             button.Text = "FLY ON"
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
@@ -245,13 +246,15 @@ function GUI:Init(modules)
             modules.ngapung:Disable()
         end
     end)
-    makeBtn(content, "NOCLIP OFF", 0.38, function(button)
+
+    makeBtn(content, "NOCLIP OFF", function(button)
         noclipEnabled = not noclipEnabled
         modules.nclip:Enable(noclipEnabled)
         button.Text = noclipEnabled and "NOCLIP ON" or "NOCLIP OFF"
         button.BackgroundColor3 = noclipEnabled and Color3.fromRGB(0,170,0) or Color3.fromRGB(170,0,0)
     end)
-    makeBtn(content,"ESP OFF", 110, function(button)
+
+    makeBtn(content, "ESP OFF", function(button)
         if button.Text == "ESP OFF" then
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
             button.Text = "ESP ON"
@@ -262,7 +265,7 @@ function GUI:Init(modules)
             modules.esp:Disable()
         end
     end)
-    makeBtn(content, "INF JUMP OFF", 110, function(button)
+    makeBtn(content, "INF JUMP OFF", function(button)
         if button.Text == "INF JUMP OFF" then
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
             button.Text = "INF JUMP ON"
@@ -273,7 +276,7 @@ function GUI:Init(modules)
             modules.infjmp:Enable()
         end
     end)
-    makeBtn(content,"TELEPORT TO PLAYERS", 110, function()
+    makeBtn(content,"TELEPORT TO PLAYERS", function()
         modules.pepet:Enable()
     end)
     local frameDrag = makeDraggable(frame)
@@ -305,7 +308,6 @@ function GUI:Init(modules)
 end
 
 return GUI
-
 
 
 
