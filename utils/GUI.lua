@@ -187,7 +187,7 @@ function GUI:Init(modules)
             label.Text = labelText .. ": " .. value
             if callback then callback(value) end
         end
-
+        update((defaultValue-minValue)/(maxValue-minValue))
         knob.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
@@ -210,8 +210,6 @@ function GUI:Init(modules)
             end
         end)
 
-
-        update((defaultValue-minValue)/(maxValue-minValue))
     end
 
     modules.ngabret:Enable()
@@ -294,6 +292,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
