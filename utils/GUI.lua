@@ -15,10 +15,10 @@ function GUI:Init(modules)
     gui.ResetOnSpawn = false
     -- MAIN FRAME
     --local defaultSize = UDim2.new(0, 450, 0, 300)
-    local defaultSize = UDim2.new(0, 550, 0, 450)
+    local defaultSize = UDim2.new(0, 380, 0, 340)
     local frame = Instance.new("Frame", gui)
     frame.Size = defaultSize
-    frame.Position = UDim2.new(0.5, -150, 0.5, -100)
+    frame.Position = UDim2.new(0.5, -135, 0.5, -115)
     frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
     local corner = Instance.new("UICorner", frame)
     corner.CornerRadius = UDim.new(0, 15)
@@ -112,7 +112,7 @@ function GUI:Init(modules)
     local function makeBtn(parent, text, yPos, callback)
 
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.8, 0, 0, 40)
+        button.Size = UDim2.new(0.8, 0, 0, 32)
         button.BackgroundColor3 = Color3.fromRGB(60,60,60)
         button.Font = Enum.Font.Arcade
         button.TextColor3 = Color3.fromRGB(0,255,180)
@@ -285,6 +285,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
