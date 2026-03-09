@@ -51,7 +51,7 @@ local function parseScore(numb)
     end
 end
 
-function guiTp:Enable()
+function guiTp:Init()
     local minimized = false
     if tpGui then tpGui:Destroy() end
     tpGui = Instance.new("ScreenGui")
@@ -274,4 +274,5 @@ function guiTp:Enable()
 end
 
 return guiTp
+
 
