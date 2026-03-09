@@ -208,12 +208,15 @@ function GUI:Init(modules)
         }
     end
     modules.ngabret:Enable()
-    createSlider(content, 60, 16, 100, 16, "Speed", function(value)
+    local speedSlider = createSlider(content, 60, 16, 100, 16, "Speed", function(value)
         modules.ngabret:setSpeed(value)
     end)
-    createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
+    local flySlider = createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
         modules.ngapung:setSpeed(value)
     end)
+    flySlider.OnDraggingChanged = function(isDragging)
+        modules.ngapung.isSliderDragging = isDragging
+    end
     if flyConnection then
         flyConnection:Disconnect()
         flyConnection = nil
@@ -313,6 +316,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
