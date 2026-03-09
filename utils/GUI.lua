@@ -210,6 +210,44 @@ function GUI:Init(modules)
                 dragging = false
             end
         end)
+        local ContextActionService = game:GetService("ContextActionService")
+
+        local function blockCamera(actionName, inputState, inputObject)
+            return Enum.ContextActionResult.Sink
+        end
+        
+        knob.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 
+            or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                -- 🔑 pas mulai drag, blok kamera
+                ContextActionService:BindAction("BlockCamera", blockCamera, false, Enum.UserInputType.MouseMovement, Enum.UserInputType.Touch)
+            end
+        end)
+        
+        bar.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
+            or input.UserInputType == Enum.UserInputType.Touch) then
+                local percent = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
+                updateSlider(percent)
+            end
+        end)
+        
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 
+            or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+                -- 🔑 pas drag selesai, lepas blok kamera
+                ContextActionService:UnbindAction("BlockCamera")
+            end
+        end)
+        RunService.RenderStepped:Connect(function()
+            if dragging then
+                local mousePos = UserInputService:GetMouseLocation().X
+                local percent = (mousePos - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
+                updateSlider(percent)
+            end
+        end)
 
     end
 
@@ -291,6 +329,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
