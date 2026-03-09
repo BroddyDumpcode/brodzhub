@@ -170,68 +170,72 @@ function guiTp:Enable()
     end)
     refreshPlayerList = function()
         if not tpGui or not list then return end
+    
+        -- hapus tombol lama
         for _, child in pairs(list:GetChildren()) do
             if child:IsA("TextButton") then
                 child:Destroy()
             end
         end
-    end
-    local players = {}
-    for _,pler in pairs(Players:GetPlayers()) do
-        if pler ~= player then
-            table.insert(players, {
-                player = pler,
-                size = getSize(pler)
-
-            })
-        end
-    end
-    table.sort(players, function(a,b)
-        return a.size > b.size
-    end)
-    for i, data in ipairs(players) do
-        local pler = data.player
-        local btn = Instance.new("TextButton")
-        btn.Size = UDim2.new(1, 0, 0, 30)
-        btn.BackgroundColor3 = Color3.fromRGB(35,35,35)
-        btn.TextColor3 = Color3.new(1,1,1)
-        btn.BorderSizePixel = 0
-        btn.TextXAlignment = Enum.TextXAlignment.Left
-        btn.TextSize = 13
-        btn.Font = Enum.Font.Gotham
-        btn.Parent = list
-        Instance.new("UICorner", btn)
-        btn.RichText = true
-        local function UpdateBtn()
-            local sizeValue = getSize(pler)
-            if type(sizeValue) ~= "number" then
-                    sizeValue = 0
+    
+        -- bikin tombol baru
+        local players = {}
+        for _, pler in pairs(Players:GetPlayers()) do
+            if pler ~= player then
+                table.insert(players, {
+                    player = pler,
+                    size = getSize(pler)
+                })
             end
-            btn.Text = string.format(
-                '<b>%d.</b> %s <font color="rgb(170,170,170)">| %s</font>|<b> %s</b>',
-                i,
-                pler.DisplayName,
-                pler.Name,
-                parseScore(sizeValue)
-                )
         end
-        btn.MouseButton1Click:Connect(function()
-            followTarget = pler
-            followEnabled = true
-
+    
+        table.sort(players, function(a,b)
+            return a.size > b.size
         end)
-        UpdateBtn()
-        local sizeValue = pler:FindFirstChild("Size", true)
-        if sizeValue then
-            sizeValue.Changed:Connect(function()
-                UpdateBtn()
+    
+        for i, data in ipairs(players) do
+            local pler = data.player
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1,0,0,30)
+            btn.BackgroundColor3 = Color3.fromRGB(35,35,35)
+            btn.TextColor3 = Color3.new(1,1,1)
+            btn.BorderSizePixel = 0
+            btn.TextXAlignment = Enum.TextXAlignment.Left
+            btn.TextSize = 13
+            btn.Font = Enum.Font.Gotham
+            btn.Parent = list
+            Instance.new("UICorner", btn)
+            btn.RichText = true
+    
+            local function UpdateBtn()
+                local s = getSize(pler)
+                if type(s) ~= "number" then s = 0 end
+                btn.Text = string.format(
+                    '<b>%d.</b> %s <font color="rgb(170,170,170)">| %s</font>|<b> %s</b>',
+                    i,
+                    pler.DisplayName,
+                    pler.Name,
+                    parseScore(s)
+                )
+            end
+    
+            btn.MouseButton1Click:Connect(function()
+                followTarget = pler
+                followEnabled = true
             end)
+    
+            UpdateBtn()
+    
+            -- update otomatis kalau ada sizeValue berubah
+            local sizeValue = pler:FindFirstChild("Size", true)
+            if sizeValue then
+                sizeValue.Changed:Connect(UpdateBtn)
+            end
         end
-
     end
-    refreshPlayerList()
     PepetBtn.MouseButton1Click:Connect(function()
         followEnabled = not followEnabled
+    
         if followEnabled then
             PepetBtn.Text = "TELEPORT ON"
             PepetBtn.BackgroundColor3 = Color3.fromRGB(40,160,80)
@@ -239,6 +243,8 @@ function guiTp:Enable()
             PepetBtn.Text = "TELEPORT OFF"
             PepetBtn.BackgroundColor3 = Color3.fromRGB(120,40,40)
         end
+    
+        refreshPlayerList() 
     end)
     if followConnection then
         followConnection:Disconnect()
@@ -268,3 +274,4 @@ function guiTp:Enable()
 end
 
 return guiTp
+
