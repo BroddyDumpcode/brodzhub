@@ -230,7 +230,7 @@ function guiTp:Enable()
             end
         end
     end
-
+    refreshPlayerList()
     PepetBtn.MouseButton1Click:Connect(function()
         followEnabled = not followEnabled
 
@@ -261,6 +261,7 @@ function guiTp:Enable()
 end
 
 return guiTp
+
 
 
 
