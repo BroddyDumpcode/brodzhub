@@ -223,27 +223,27 @@ function GUI:Init(modules)
         end)
 
     end
-    modules:ngabret:Enable()
+    modules.ngabret:Enable()
     createSlider(content, 60, 16, 100, 16, "Speed", function(value)
-        modules:ngabret:setSpeed(value)
+        modules.ngabret:setSpeed(value)
     end)
     createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
-        modules:ngapung:setSpeed = value
+        modules.ngapung:setSpeed = value
     end)
     local flyBtn = makeBtn(content, "FLY OFF", 170, function(button)
         if button.text == "FLY OFF" then
             button.Text = "FLY ON"
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
-            modules:ngapung:Enable()
+            modules.ngapung:Enable()
         else
             button.Text = "FLY OFF"
             button.BackgroundColor3 = Color3.fromRGB(170,0,0)
-            modules:ngapung:Disable()
+            modules.ngapung:Disable()
         end
     end)
     local nclipBtn = makeBtn(content, "NOCLIP OFF", 0.38, function(button)
         noclipEnabled = not noclipEnabled
-        modules:nclip:Enable(noclipEnabled)
+        modules.nclip:Enable(noclipEnabled)
         button.Text = noclipEnabled and "NOCLIP ON" or "NOCLIP OFF"
         button.BackgroundColor3 = noclipEnabled and Color3.fromRGB(0,170,0) or Color3.fromRGB(170,0,0)
     end)
@@ -251,26 +251,26 @@ function GUI:Init(modules)
         if button.Text == "ESP OFF" then
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
             button.Text = "ESP ON"
-            modules:nclip:Enable()
+            modules.nclip:Enable()
         else
             button.BackgroundColor3 = Color3.fromRGB(170,0,0)
             button.Text = "ESP OFF"
-            modules:nclip:Disable()
+            modules.nclip:Disable()
         end
     end)
     local infJumpBtn = makeBtn(content, "INF JUMP OFF", 110, function(button)
         if button.Text == "INF JUMP OFF" then
             button.BackgroundColor3 = Color3.fromRGB(0,170,0)
             button.Text = "INF JUMP ON"
-            modules:infjmp:Enable()
+            modules.infjmp:Enable()
         else
             button.BackgroundColor3 = Color3.fromRGB(170,0,0)
             button.Text = "INF JUMP OFF"
-            modules:infjmp:Enable()
+            modules.infjmp:Enable()
         end
     end)
     local tpBtn = makeBtn(content,"TELEPORT TO PLAYERS", 110, function()
-        modules:pepet:Enable()
+        modules.pepet:Enable()
     end)
     local frameDrag = makeDraggable(frame)
     local circleDrag = makeDraggable(circle)
@@ -301,4 +301,5 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
