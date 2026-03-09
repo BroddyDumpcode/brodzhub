@@ -82,7 +82,7 @@ function fly:Disable()
     if bg then bg:Destroy() end
 end
 
-function fly.setSpeed(v)
+function fly:setSpeed(v)
     speed = v
 end
 
@@ -109,5 +109,6 @@ UserInputService.InputEnded:Connect(function(i,gp)
     if i.KeyCode == Enum.KeyCode.Space then control.u = 0 end
     if i.KeyCode == Enum.KeyCode.LeftShift then control.d = 0 end
 end)
+
 
 return fly
