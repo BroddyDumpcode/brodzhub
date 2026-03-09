@@ -214,23 +214,20 @@ function GUI:Init(modules)
 
 
     modules.ngabret:Enable()
-    speedSlider = createSlider(content, 60, 16, 100, 16, "Speed", function(value)
-        modules.ngabret:setSpeed(value)
-    end)
-    flySlider = createSlider(content, 40, 16, 100, 16, "Fly Speed", function(value)
-        modules.ngapung:setSpeed(value)
-    end)
-    makeBtn(content, "FLY OFF", function(button)
-        if button.Text == "FLY OFF" then
-            button.Text = "FLY ON"
-            button.BackgroundColor3 = Color3.fromRGB(0,170,0)
-            modules.ngapung:Enable()
-        else
-            button.Text = "FLY OFF"
-            button.BackgroundColor3 = Color3.fromRGB(170,0,0)
-            modules.ngapung:Disable()
+    createSlider(content, 16, 100, 16, "Speed", function(value)
+        print("Speed slider:", value) -- debug
+        if modules.ngabret and typeof(modules.ngabret.setSpeed) == "function" then
+            modules.ngabret:setSpeed(value)
         end
     end)
+    
+    createSlider(content, 16, 100, 16, "Fly Speed", function(value)
+        print("Fly slider:", value) -- debug
+        if modules.ngapung and typeof(modules.ngapung.setSpeed) == "function" then
+            modules.ngapung:setSpeed(value)
+        end
+    end)
+
 
     makeBtn(content, "NOCLIP OFF", function(button)
         noclipEnabled = not noclipEnabled
@@ -293,6 +290,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
