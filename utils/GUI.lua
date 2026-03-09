@@ -149,7 +149,6 @@ function GUI:Init(modules)
         container.Size = UDim2.new(0.9, 0, 0, 40)
         container.BackgroundTransparency = 1
     
-        -- Label
         local label = Instance.new("TextLabel", container)
         label.Size = UDim2.new(1, 0, 0, 15)
         label.BackgroundTransparency = 1
@@ -158,17 +157,14 @@ function GUI:Init(modules)
         label.Font = Enum.Font.Arcade
         label.TextScaled = true
     
-        -- Bar
         local bar = Instance.new("Frame", container)
         bar.Size = UDim2.new(1, 0, 0, 8)
         bar.Position = UDim2.new(0, 0, 0, 20)
         bar.BackgroundColor3 = Color3.fromRGB(200,200,200)
     
-        -- Fill
         local fill = Instance.new("Frame", bar)
         fill.BackgroundColor3 = Color3.fromRGB(0,170,255)
     
-        -- Knob
         local knob = Instance.new("Frame", bar)
         knob.Size = UDim2.new(0, 20, 0, 20)
         knob.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -176,21 +172,22 @@ function GUI:Init(modules)
     
         local dragging = false
     
-        -- Update function
-        local function update(percent)
+        -- Ganti nama fungsi biar aman
+        local function updateSlider(percent)
             percent = math.clamp(percent, 0, 1)
             fill.Size = UDim2.new(percent, 0, 1, 0)
             knob.Position = UDim2.new(percent, 0, 0.5, 0)
             local value = math.floor(minValue + (maxValue-minValue)*percent)
             label.Text = labelText .. ": " .. value
-            if callback then callback(value) end
+            if typeof(callback) == "function" then
+                callback(value)
+            end
         end
     
-        -- 🔑 Set default value di sini
+        -- Set default
         local defaultPercent = (defaultValue-minValue)/(maxValue-minValue)
-        update(defaultPercent)
+        updateSlider(defaultPercent)
     
-        -- Event drag knob
         knob.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
@@ -202,7 +199,7 @@ function GUI:Init(modules)
             if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
             or input.UserInputType == Enum.UserInputType.Touch) then
                 local percent = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
-                update(percent)
+                updateSlider(percent)
             end
         end)
     
@@ -213,6 +210,7 @@ function GUI:Init(modules)
             end
         end)
     end
+
 
     modules.ngabret:Enable()
     speedSlider = createSlider(content, 60, 16, 100, 16, "Speed", function(value)
@@ -294,6 +292,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
