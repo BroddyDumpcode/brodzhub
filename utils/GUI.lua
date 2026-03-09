@@ -120,7 +120,8 @@ function GUI:Init(modules)
         button.TextSize = 16
         button.TextScaled = false
         button.Parent = parent
-
+        button.AnchorPoint = Vector2.new(0.5, 0.5)
+        button.Position = UDim2.new(0.5, 0, 0.5, 0)
         local corner = Instance.new("UICorner", button)
         corner.CornerRadius = UDim.new(0,10)
         corner.Parent = button
@@ -304,6 +305,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
