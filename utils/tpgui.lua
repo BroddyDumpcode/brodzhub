@@ -11,21 +11,6 @@ local tpGui
 --table
 local guiTp = {}
 
-
--- tpgui.lua
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local TweenService = game:GetService("TweenService")
-local player = Players.LocalPlayer
-
-local guiTp = {}
-local tpGui
-local followTarget
-local followEnabled = false
-local followConnection
-local refreshPlayerList
-
--- Fungsi ambil HumanoidRootPart dengan timeout
 local function getHRP(pler, timeout)
     timeout = timeout or 10
     local start = tick()
@@ -37,8 +22,6 @@ local function getHRP(pler, timeout)
     end
     return nil
 end
-
--- Fungsi ambil score / size player
 local function getSize(peler)
     local stats = peler:FindFirstChild("leaderstats")
     if stats then
@@ -50,8 +33,6 @@ local function getSize(peler)
     end
     return 0
 end
-
--- Parse angka besar ke format K/M/B/T
 local function parseScore(n)
     if n >= 1e12 then
         return string.format("%.2fT", n/1e12)
@@ -65,8 +46,6 @@ local function parseScore(n)
         return tostring(n)
     end
 end
-
--- Enable / tampilkan GUI
 function guiTp:Enable()
     if tpGui then tpGui:Destroy() end
     tpGui = Instance.new("ScreenGui")
@@ -88,7 +67,7 @@ function guiTp:Enable()
     top.Size = UDim2.new(1,0,0,35)
     top.BackgroundColor3 = Color3.fromRGB(35,35,35)
     Instance.new("UICorner", top).CornerRadius = UDim.new(0,12)
-
+    --tittle
     local title = Instance.new("TextLabel", top)
     title.Size = UDim2.new(1,-90,1,0)
     title.Position = UDim2.new(0,10,0,0)
@@ -98,7 +77,7 @@ function guiTp:Enable()
     title.Text = "TELEPORT OFF"
     title.Font = Enum.Font.Arcade
     title.TextXAlignment = Enum.TextXAlignment.Left
-
+    --close bttn
     local closeBtn = Instance.new("TextButton", top)
     closeBtn.Size = UDim2.new(0,25,0,25)
     closeBtn.Position = UDim2.new(1,-35,0,5)
@@ -106,7 +85,7 @@ function guiTp:Enable()
     closeBtn.Text = "X"
     closeBtn.TextColor3 = Color3.new(1,1,1)
     Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(1,0)
-
+    --Minimize bttn
     local minimizeBtn = Instance.new("TextButton", top)
     minimizeBtn.Size = UDim2.new(0,25,0,25)
     minimizeBtn.Position = UDim2.new(1,-65,0,5)
@@ -114,7 +93,6 @@ function guiTp:Enable()
     minimizeBtn.Text = "-"
     minimizeBtn.TextColor3 = Color3.new(1,1,1)
     Instance.new("UICorner", minimizeBtn).CornerRadius = UDim.new(1,0)
-
     -- List players
     local list = Instance.new("ScrollingFrame", mainFrame)
     list.Position = UDim2.new(0,10,0,40)
@@ -123,12 +101,11 @@ function guiTp:Enable()
     list.BorderSizePixel = 0
     list.AutomaticCanvasSize = Enum.AutomaticSize.Y
     Instance.new("UICorner", list)
-
+    --layout
     local layout = Instance.new("UIListLayout", list)
     layout.Padding = UDim.new(0,5)
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-    -- Teleport button
+    -- Tp bttn
     local PepetBtn = Instance.new("TextButton", mainFrame)
     PepetBtn.Size = UDim2.new(1,-20,0,30)
     PepetBtn.Position = UDim2.new(0,10,1,-40)
@@ -137,12 +114,10 @@ function guiTp:Enable()
     PepetBtn.TextColor3 = Color3.new(1,1,1)
     PepetBtn.BorderSizePixel = 0
     Instance.new("UICorner", PepetBtn)
-
     -- Resize / minimize
     local function resize(size)
         TweenService:Create(mainFrame, TweenInfo.new(0.25), {Size = size}):Play()
     end
-
     local minimized = false
     minimizeBtn.MouseButton1Click:Connect(function()
         minimized = not minimized
@@ -156,7 +131,6 @@ function guiTp:Enable()
             PepetBtn.Visible = true
         end
     end)
-
     closeBtn.MouseButton1Click:Connect(function()
         if tpGui then
             tpGui:Destroy()
@@ -166,8 +140,6 @@ function guiTp:Enable()
             followEnabled = false
         end
     end)
-
-    -- refresh player list
     refreshPlayerList = function()
         if not tpGui or not list then return end
 
@@ -176,7 +148,6 @@ function guiTp:Enable()
                 child:Destroy()
             end
         end
-
         local players = {}
         for _, pler in pairs(Players:GetPlayers()) do
             if pler ~= player then
@@ -186,11 +157,9 @@ function guiTp:Enable()
                 })
             end
         end
-
         table.sort(players,function(a,b)
             return a.size > b.size
         end)
-
         for i,data in ipairs(players) do
             local pler = data.player
             local btn = Instance.new("TextButton")
@@ -204,7 +173,6 @@ function guiTp:Enable()
             btn.Parent = list
             Instance.new("UICorner", btn)
             btn.RichText = true
-
             local function UpdateBtn()
                 local s = getSize(pler)
                 if type(s) ~= "number" then s = 0 end
@@ -216,14 +184,11 @@ function guiTp:Enable()
                     parseScore(s)
                 )
             end
-
             btn.MouseButton1Click:Connect(function()
                 followTarget = pler
                 followEnabled = true
             end)
-
             UpdateBtn()
-
             local sizeValue = pler:FindFirstChild("Size", true)
             if sizeValue then
                 sizeValue.Changed:Connect(UpdateBtn)
@@ -233,7 +198,6 @@ function guiTp:Enable()
     refreshPlayerList()
     PepetBtn.MouseButton1Click:Connect(function()
         followEnabled = not followEnabled
-
         if followEnabled then
             PepetBtn.Text = "TELEPORT ON"
             PepetBtn.BackgroundColor3 = Color3.fromRGB(40,160,80)
@@ -241,11 +205,8 @@ function guiTp:Enable()
             PepetBtn.Text = "TELEPORT OFF"
             PepetBtn.BackgroundColor3 = Color3.fromRGB(120,40,40)
         end
-
-        refreshPlayerList() -- update player list saat tombol diklik
+        refreshPlayerList()
     end)
-
-    -- Follow loop
     if followConnection then
         followConnection:Disconnect()
     end
@@ -259,8 +220,8 @@ function guiTp:Enable()
         end
     end)
 end
-
 return guiTp
+
 
 
 
