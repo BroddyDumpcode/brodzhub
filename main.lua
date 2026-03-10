@@ -21,9 +21,3 @@ loader:SetProgress(1)
 task.wait(0.5)
 loader:Destroy()
 GUI:Init(modules)
-
-
-
-
-
-
