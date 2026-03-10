@@ -6,7 +6,7 @@ local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 local GUI = {}
 local noclipEnabled = false
-print("currently preparing the feature"
+print("currently preparing the feature")
 function GUI:Init(modules)
     -- GUI
     local gui = Instance.new("ScreenGui")
@@ -325,3 +325,4 @@ function GUI:Init(modules)
     end)
 end
 return GUI
+
