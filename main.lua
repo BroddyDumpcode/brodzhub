@@ -9,8 +9,5 @@ local modules = {
     infjmp = loadstring(game:HttpGet(repo.."modules/infjmp.lua"))(),
     pepet = loadstring(game:HttpGet(repo.."utils/tpgui.lua"))()
 }
-repeat task.wait() until game:IsLoaded()
-GUI:Init(modules)
 print("feature has been loaded...")
-
-
+GUI:Init(modules)
