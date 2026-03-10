@@ -38,13 +38,6 @@ function GUI:Init(modules)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     layout.VerticalAlignment = Enum.VerticalAlignment.Top
-
-    --LIST LAYOUT
-    local listLayout = Instance.new("UIListLayout", content)
-    listLayout.Padding = UDim.new(0,8)
-    listLayout.FillDirection = Enum.FillDirection.Vertical
-    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
     -- TITLE
     local title = Instance.new("TextLabel", header)
     title.Size = UDim2.new(1, -40, 1, 0)
@@ -154,7 +147,6 @@ function GUI:Init(modules)
         local sliderFrame = Instance.new("Frame", parent)
         sliderFrame.Size = UDim2.new(0.9, 0, 0, 50)
         sliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-        sliderFrame.LayoutOrder = 2
         Instance.new("UICorner", sliderFrame)
     
         local sliderLabel = Instance.new("TextLabel", sliderFrame)
@@ -289,6 +281,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
