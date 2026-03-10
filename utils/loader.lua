@@ -37,7 +37,7 @@ function Loading:Init()
     loadingText.TextScaled = true
     local sound = Instance.new("Sound")
     sound.SoundId = "rbxassetid://6658242064"
-    sound.Volume = 0.7
+    sound.Volume = 2
     sound.Parent = gui
     local barBg = Instance.new("Frame", panel)
     barBg.Size = UDim2.new(0.8,0,0,8)
@@ -70,4 +70,5 @@ function Loading:Destroy()
 end
 
 return Loading
+
 
