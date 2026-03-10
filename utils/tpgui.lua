@@ -1,5 +1,5 @@
 local Players = game:GetService("Players")
-local runService = game:GetService("RunService")
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local player = Players.LocalPlayer
 --tools
@@ -221,6 +221,7 @@ function guiTp:Enable()
     end)
 end
 return guiTp
+
 
 
 
