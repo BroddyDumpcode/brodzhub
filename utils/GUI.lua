@@ -145,117 +145,70 @@ function GUI:Init(modules)
         return button
     end
     
-    local function createSlider(parent, minValue, maxValue, defaultValue, labelText, callback)
-        local container = Instance.new("Frame", parent)
-        container.Size = UDim2.new(0.9, 0, 0, 40)
-        container.BackgroundTransparency = 1
+    function createSlider(parent, minValue, maxValue, defaultValue, labelText, onValueChanged)
+        local sliderFrame = Instance.new("Frame", parent)
+        sliderFrame.Size = UDim2.new(0.9, 0, 0, 50)
+        sliderFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        Instance.new("UICorner", sliderFrame)
     
-        local label = Instance.new("TextLabel", container)
-        label.Size = UDim2.new(1, 0, 0, 15)
-        label.BackgroundTransparency = 1
-        label.TextColor3 = Color3.fromRGB(0,255,180)
-        label.Text = labelText .. ": " .. defaultValue
-        label.Font = Enum.Font.Arcade
-        label.TextScaled = true
+        local sliderLabel = Instance.new("TextLabel", sliderFrame)
+        sliderLabel.Size = UDim2.new(1, 0, 0, 25)
+        sliderLabel.BackgroundTransparency = 1
+        sliderLabel.TextColor3 = Color3.new(1,1,1)
+        sliderLabel.Font = Enum.Font.Gotham
+        sliderLabel.Text = labelText..": "..defaultValue
     
-        local bar = Instance.new("Frame", container)
-        bar.Size = UDim2.new(1, 0, 0, 8)
-        bar.Position = UDim2.new(0, 0, 0, 20)
-        bar.BackgroundColor3 = Color3.fromRGB(200,200,200)
+        local sliderBar = Instance.new("Frame", sliderFrame)
+        sliderBar.Size = UDim2.new(0.8, 0, 0, 4)
+        sliderBar.Position = UDim2.new(0.1, 0, 0.7, 0)
+        sliderBar.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     
-        local fill = Instance.new("Frame", bar)
-        fill.BackgroundColor3 = Color3.fromRGB(0,170,255)
+        local sliderDot = Instance.new("Frame", sliderBar)
+        sliderDot.Size = UDim2.new(0, 14, 0, 14)
+        sliderDot.Position = UDim2.new((defaultValue-minValue)/(maxValue-minValue), -7, 0.5, -7)
+        sliderDot.BackgroundColor3 = Color3.fromRGB(0, 255, 180)
+        Instance.new("UICorner", sliderDot)
     
-        local knob = Instance.new("Frame", bar)
-        knob.Size = UDim2.new(0, 20, 0, 20)
-        knob.AnchorPoint = Vector2.new(0.5, 0.5)
-        knob.BackgroundColor3 = Color3.fromRGB(255,255,255)
+        local isDragging = false
+        local currentValue = defaultValue
     
-        local dragging = false
-    
-        -- fungsi update slider
-        local function updateSlider(percent)
-            percent = math.clamp(percent, 0, 1)
-            fill.Size = UDim2.new(percent, 0, 1, 0)
-            knob.Position = UDim2.new(percent, 0, 0.5, 0)
-            local value = math.floor(minValue + (maxValue-minValue)*percent)
-            label.Text = labelText .. ": " .. value
-            if typeof(callback) == "function" then
-                callback(value)
-            end
-        end
-    
-        -- set default
-        local defaultPercent = (defaultValue-minValue)/(maxValue-minValue)
-        updateSlider(defaultPercent)
-        bar.Active = true
-        knob.Active = true
-        knob.InputBegan:Connect(function(input)
+        sliderDot.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
+                isDragging = true
             end
         end)
-        
-        bar.InputChanged:Connect(function(input)
-            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
-            or input.UserInputType == Enum.UserInputType.Touch) then
-                local percent = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
-                updateSlider(percent)
-            end
-        end)
-        
+    
         UserInputService.InputEnded:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
+                isDragging = false
             end
         end)
-        local ContextActionService = game:GetService("ContextActionService")
-
-        local function blockCamera(actionName, inputState, inputObject)
-            return Enum.ContextActionResult.Sink
-        end
-        
-        knob.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 
-            or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                -- 🔑 pas mulai drag, blok kamera
-                ContextActionService:BindAction("BlockCamera", blockCamera, false, Enum.UserInputType.MouseMovement, Enum.UserInputType.Touch)
-            end
-        end)
-        
-        bar.InputChanged:Connect(function(input)
-            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement 
-            or input.UserInputType == Enum.UserInputType.Touch) then
-                local percent = (input.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
-                updateSlider(percent)
-            end
-        end)
-        
-        UserInputService.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 
-            or input.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
-                -- 🔑 pas drag selesai, lepas blok kamera
-                ContextActionService:UnbindAction("BlockCamera")
-            end
-        end)
+    
         RunService.RenderStepped:Connect(function()
-            if dragging then
+            if isDragging then
                 local mousePos = UserInputService:GetMouseLocation().X
-                local percent = (mousePos - bar.AbsolutePosition.X) / bar.AbsoluteSize.X
-                updateSlider(percent)
+                local barPos = sliderBar.AbsolutePosition.X
+                local barSize = sliderBar.AbsoluteSize.X
+                local percent = math.clamp((mousePos - barPos) / barSize, 0, 1)
+    
+                sliderDot.Position = UDim2.new(percent, -7, 0.5, -7)
+                currentValue = math.floor(minValue + (percent * (maxValue - minValue)))
+                sliderLabel.Text = labelText..": "..currentValue
+    
+                if onValueChanged then
+                    onValueChanged(currentValue)
+                end
             end
         end)
-
+    
+        return sliderFrame
     end
-
-
+    
     modules.ngabret:Enable()
     createSlider(content, 16, 100, 16, "Speed", function(value)
-        print("Speed slider:", value) -- debug
+        print("Speed slider:", value)
         if modules.ngabret and typeof(modules.ngabret.setSpeed) == "function" then
             modules.ngabret:setSpeed(value)
         end
@@ -330,6 +283,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
