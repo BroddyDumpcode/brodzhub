@@ -36,7 +36,7 @@ function Loading:Init()
     loadingText.TextColor3 = Color3.fromRGB(200,200,200)
     loadingText.TextScaled = true
     local sound = Instance.new("Sound")
-    sound.SoundId = "rbxassetid://6658242064"
+    sound.SoundId = "rbxassetid://135545038339685"
     sound.Volume = 2
     sound.Parent = gui
     local barBg = Instance.new("Frame", panel)
@@ -70,5 +70,6 @@ function Loading:Destroy()
 end
 
 return Loading
+
 
 
