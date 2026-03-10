@@ -1,4 +1,7 @@
-repeat task.wait() until game:IsLoaded()
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+local startTime = tick()
 local repo = "https://raw.githubusercontent.com/BroddyDumpcode/luah/main/"
 local loader = loadstring(game:HttpGet(repo.."utils/loader.lua"))()
 loader:Init()
@@ -18,6 +21,11 @@ print("feature has been loaded...")
 print("ngabret:", modules.ngabret)
 print("setSpeed:", modules.ngabret and modules.ngabret.setSpeed)
 loader:SetProgress(1)
-task.wait(0.5)
+local minTime = 2
+local elapsed = tick() - startTime
+if elapsed < minTime then
+    task.wait(minTime - elapsed)
+end
 loader:Destroy()
 GUI:Init(modules)
+
