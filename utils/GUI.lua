@@ -257,32 +257,40 @@ function GUI:Init(modules)
         end
     end)
 
-
+    makeBtn(content, "FLY OFF", function(button)
+            if button.Text == "FLY OFF" then
+                button.Text = "FLY ON"
+                button.BackgroundColor3 = Color3.fromRGB(0,170,0)
+                modules.ngapung:Enable()
+            else
+                button.Text = "FLY OFF"
+                button.BackgroundColor3 = Color3.fromRGB(170,0,0)
+                modules.ngapung:Disable()
     makeBtn(content, "NOCLIP OFF", function(button)
         noclipEnabled = not noclipEnabled
         modules.nclip:Enable(noclipEnabled)
         button.Text = noclipEnabled and "NOCLIP ON" or "NOCLIP OFF"
-        button.BackgroundColor3 = noclipEnabled and Color3.fromRGB(0,170,0) or Color3.fromRGB(170,0,0)
+        button.BackgroundColor3 = noclipEnabled and Color3.fromRGB(40,160,80) or Color3.fromRGB(120,40,40)
     end)
 
     makeBtn(content, "ESP OFF", function(button)
         if button.Text == "ESP OFF" then
-            button.BackgroundColor3 = Color3.fromRGB(0,170,0)
+            button.BackgroundColor3 = Color3.fromRGB(40,160,80)
             button.Text = "ESP ON"
             modules.esp:Enable()
         else
-            button.BackgroundColor3 = Color3.fromRGB(170,0,0)
+            button.BackgroundColor3 = Color3.fromRGB(120,40,40)
             button.Text = "ESP OFF"
             modules.esp:Disable()
         end
     end)
     makeBtn(content, "INF JUMP OFF", function(button)
         if button.Text == "INF JUMP OFF" then
-            button.BackgroundColor3 = Color3.fromRGB(0,170,0)
+            button.BackgroundColor3 = Color3.fromRGB(40,160,80)
             button.Text = "INF JUMP ON"
             modules.infjmp:Enable()
         else
-            button.BackgroundColor3 = Color3.fromRGB(170,0,0)
+            button.BackgroundColor3 = Color3.fromRGB(120,40,40)
             button.Text = "INF JUMP OFF"
             modules.infjmp:Disable()
         end
@@ -319,6 +327,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
