@@ -250,7 +250,7 @@ function GUI:Init(modules)
         else
             button.BackgroundColor3 = Color3.fromRGB(170,0,0)
             button.Text = "INF JUMP OFF"
-            modules.infjmp:Enable()
+            modules.infjmp:Disable()
         end
     end)
     makeBtn(content,"TELEPORT TO PLAYERS", function()
@@ -285,6 +285,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
