@@ -14,13 +14,14 @@ loader:SetProgress(0.7)
 modules.nclip = loadstring(game:HttpGet(repo.."modules/nclip.lua"))()
 modules.infjmp = loadstring(game:HttpGet(repo.."modules/infjmp.lua"))()
 modules.pepet = loadstring(game:HttpGet(repo.."utils/tpgui.lua"))()
-loader:SetProgress(1)
 print("feature has been loaded...")
 print("ngabret:", modules.ngabret)
 print("setSpeed:", modules.ngabret and modules.ngabret.setSpeed)
+loader:SetProgress(1)
 task.wait(0.5)
 loader:Destroy()
 GUI:Init(modules)
+
 
 
 
