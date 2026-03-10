@@ -324,7 +324,4 @@ function GUI:Init(modules)
         frameDrag:Disable()
     end)
 end
-
 return GUI
-
-
