@@ -21,6 +21,10 @@ function GUI:Init(modules)
     frame.Size = defaultSize
     frame.Position = UDim2.new(0.5, -135, 0.5, -115)
     frame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+    local stroke = Instance.new("UIStroke", frame)
+    stroke.Color = Color3.fromRGB(0,255,180)
+    stroke.Thickness = 1
+    stroke.Transparency = 0.5
     local corner = Instance.new("UICorner", frame)
     corner.CornerRadius = UDim.new(0, 15)
     -- HEADER
@@ -28,9 +32,12 @@ function GUI:Init(modules)
     header.Size = UDim2.new(1, 0, 0, 40)
     header.BackgroundColor3 = Color3.fromRGB(45,45,45)
     -- CONTENT FRANE
-    local content = Instance.new("Frame", frame)
-    content.Position = UDim2.new(0,0,0,40)
+    local content = Instance.new("ScrollingFrame", frame)
     content.Size = UDim2.new(1,0,1,-40)
+    content.Position = UDim2.new(0,0,0,40)
+    content.CanvasSize = UDim2.new(0,0,0,0)
+    content.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    content.ScrollBarThickness = 4
     content.BackgroundTransparency = 1
     --UILISTLAYOUT
     local layout = Instance.new("UIListLayout", content)
@@ -51,7 +58,10 @@ function GUI:Init(modules)
     title.Text = "Brodz Hub"
     title.TextColor3 = Color3.fromRGB(0,255,180)
     title.TextScaled = true
-
+    
+    local titleStroke = Instance.new("UIStroke", title)
+    titleStroke.Color = Color3.fromRGB(0,255,180)
+    titleStroke.Thickness = 1
     -- MINIMIZE
     local minimize = Instance.new("TextButton", frame)
     minimize.Size = UDim2.new(0, 30, 0, 30)
@@ -173,7 +183,33 @@ function GUI:Init(modules)
     
         local isDragging = false
         local currentValue = defaultValue
-    
+        local function updateSlider(x)
+            local barPos = sliderBar.AbsolutePosition.X
+            local barSize = sliderBar.AbsoluteSize.X
+        
+            local percent = math.clamp((x - barPos) / barSize, 0, 1)
+        
+            sliderDot.Position = UDim2.new(percent, -7, 0.5, -7)
+        
+            currentValue = math.floor(minValue + (percent * (maxValue - minValue)))
+            sliderLabel.Text = labelText..": "..currentValue
+        
+            if onValueChanged then
+                onValueChanged(currentValue)
+            end
+        end
+        sliderBar.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                isDragging = true
+                updateSlider(input.Position.X)
+            end
+        end)
+        
+        sliderBar.InputChanged:Connect(function(input)
+            if isDragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                updateSlider(input.Position.X)
+            end
+        end)
         sliderDot.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 
             or input.UserInputType == Enum.UserInputType.Touch then
@@ -260,10 +296,10 @@ function GUI:Init(modules)
     local circleDrag = makeDraggable(circle)
     frameDrag:Disable()
     circleDrag:Enable()
-    local minimizeTween = TweenService:Create(content, tweenInfo, {
-        Size = defaultSize
+    local minimizeTween = TweenService:Create(frame, tweenInfo, {
+        Size = UDim2.new(0,0,0,0)
     })
-    local openTween = TweenService:Create(content, tweenInfo, {
+    local openTween = TweenService:Create(frame, tweenInfo, {
         Size = defaultSize
     })
     minimize.MouseButton1Click:Connect(function()
@@ -285,6 +321,7 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
 
 
