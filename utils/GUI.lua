@@ -241,10 +241,7 @@ function GUI:Init(modules)
     
         return sliderFrame
     end
-    
-    if modules.ngabret then
-        modules.ngabret:Enable()
-    end
+    modules.ngabret:Enable()
     createSlider(content, 16, 100, 16, "Speed", function(value)
         if modules.ngabret and typeof(modules.ngabret.setSpeed) == "function" then
             modules.ngabret:setSpeed(value)
@@ -329,4 +326,5 @@ function GUI:Init(modules)
 end
 
 return GUI
+
 
