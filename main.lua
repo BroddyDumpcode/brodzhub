@@ -19,8 +19,9 @@ print("feature has been loaded...")
 print("ngabret:", modules.ngabret)
 print("setSpeed:", modules.ngabret and modules.ngabret.setSpeed)
 task.wait(0.5)
-loadingGui:Destroy()
+loader:Destroy()
 GUI:Init(modules)
+
 
 
 
