@@ -110,6 +110,7 @@ function guiTp:Enable()
     PepetBtn.Size = UDim2.new(1,-20,0,30)
     PepetBtn.Position = UDim2.new(0,10,1,-40)
     PepetBtn.Text = "TELEPORT TO PLAYERS"
+    pepetBtn.Font = Enum.Font.Arcade
     PepetBtn.BackgroundColor3 = Color3.fromRGB(60,60,60)
     PepetBtn.TextColor3 = Color3.new(1,1,1)
     PepetBtn.BorderSizePixel = 0
@@ -221,6 +222,7 @@ function guiTp:Enable()
     end)
 end
 return guiTp
+
 
 
 
