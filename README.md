@@ -11,7 +11,7 @@ farming ✅
 > don't misuse it‼️
 ## Run my code.
 ```
-loadstring(game:HttpGet("https://raw.githubusercontent.com/BroddyDumpcode/luah/refs/heads/main/main.lua", True))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/BroddyDumpcode/brodzhub/refs/heads/main/main.lua", True))()
 ```
 [GIVE ME A COFFEE:)](https://saweria.co/BroddyCode)
 
