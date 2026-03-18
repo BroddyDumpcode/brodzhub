@@ -253,8 +253,9 @@ function GUI:Init(modules)
             modules.ngapung:setSpeed(value)
         end
     end)
-
+    local flyEnabled = false
     makeBtn(content, "FLY OFF", function(button)
+            flyEnabled = not flyEnabled
             if button.Text == "FLY OFF" then
                 button.Text = "FLY ON"
                 button.BackgroundColor3 = Color3.fromRGB(0,170,0)
