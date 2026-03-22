@@ -13,7 +13,6 @@ function GUI:Init(modules)
     gui.Parent = player:WaitForChild("PlayerGui")
     gui.ResetOnSpawn = false
     -- MAIN FRAME
-    --local defaultSize = UDim2.new(0, 450, 0, 300)
     local defaultSize = UDim2.new(0, 380, 0, 340)
     local frame = Instance.new("Frame", gui)
     frame.Size = defaultSize
@@ -82,7 +81,6 @@ function GUI:Init(modules)
 
     -- TWEEN
     local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    -- DRAG SYSTEM (WORKS FOR BOTH)
     local function makeDraggable(uiObject)
         local dragging = false
         local dragStart
@@ -121,12 +119,12 @@ function GUI:Init(modules)
             Disable = function() canDrag = false end
         }
     end
-    -- DEFINISI TOMBOL
+    -- FUNGSI TOMBOL
     local function makeBtn(parent, text, callback)
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(0.8, 0, 0, 32) -- lebar 80% biar pas
-        button.AnchorPoint = Vector2.new(0.5, 0) -- titik tengah horizontal
-        button.Position = UDim2.new(0.5, 0, 0, 0) -- otomatis di tengah parent
+        button.Size = UDim2.new(0.8, 0, 0, 32) 
+        button.AnchorPoint = Vector2.new(0.5, 0)
+        button.Position = UDim2.new(0.5, 0, 0, 0)
         button.BackgroundColor3 = Color3.fromRGB(60,60,60)
         button.Font = Enum.Font.Arcade
         button.TextColor3 = Color3.fromRGB(0,255,180)
@@ -138,7 +136,6 @@ function GUI:Init(modules)
         local corner = Instance.new("UICorner", button)
         corner.CornerRadius = UDim.new(0,10)
 
-        -- Hover effect
         button.MouseEnter:Connect(function()
             button.BackgroundColor3 = Color3.fromRGB(80,80,80)
         end)
@@ -241,7 +238,7 @@ function GUI:Init(modules)
     
         return sliderFrame
     end
-    modules.ngabret:Enable()
+    --modules.ngabret:Enable()
     createSlider(content, 16, 100, 16, "Speed", function(value)
         if modules.ngabret and typeof(modules.ngabret.setSpeed) == "function" then
             modules.ngabret:setSpeed(value)
@@ -254,6 +251,17 @@ function GUI:Init(modules)
         end
     end)
     local flyEnabled = false
+    makeBtn(content, "SPEED OFF", function(button)
+            if button.Text = "SPEED OFF" then
+                button.Text = "SPEED ON!"
+                button.BackgroundColor3 = Color3.fromRGB(0,170,0)
+                modules.ngabret:Enable()
+            else
+                button.Text = "SPEED OFF!"
+                button.BackgroundColor3 = Color3.fromRGB(170,0,0)
+                modules.ngabret:Disable()
+            end
+        end)
     makeBtn(content, "FLY OFF", function(button)
             flyEnabled = not flyEnabled
             if button.Text == "FLY OFF" then
