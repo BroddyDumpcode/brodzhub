@@ -261,7 +261,7 @@ function GUI:Init(modules)
                 button.BackgroundColor3 = Color3.fromRGB(170,0,0)
                 modules.ngabret:Disable()
             end
-        end)
+    end)
     makeBtn(content, "FLY OFF", function(button)
             flyEnabled = not flyEnabled
             if button.Text == "FLY OFF" then
