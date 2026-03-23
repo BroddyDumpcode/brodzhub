@@ -238,7 +238,7 @@ function GUI:Init(modules)
     
         return sliderFrame
     end
-    --modules.ngabret:Enable()
+    modules.ngabret:Enable()
     createSlider(content, 16, 100, 16, "Speed", function(value)
         if modules.ngabret and typeof(modules.ngabret.setSpeed) == "function" then
             modules.ngabret:setSpeed(value)
@@ -251,6 +251,7 @@ function GUI:Init(modules)
         end
     end)
     local flyEnabled = false
+    --[[
     makeBtn(content, "SPEED OFF", function(button)
             if button.Text = "SPEED OFF" then
                 button.Text = "SPEED ON!"
@@ -262,6 +263,7 @@ function GUI:Init(modules)
                 modules.ngabret:Disable()
             end
     end)
+    ]]--
     makeBtn(content, "FLY OFF", function(button)
             flyEnabled = not flyEnabled
             if button.Text == "FLY OFF" then
